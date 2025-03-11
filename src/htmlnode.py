@@ -24,3 +24,19 @@ class HTMLNode:
 
 	def __repr__(self):
 		return f' The tag is {self.tag}. The value is {self.value}. The children are {self.children}. The props are {self.props}.'
+
+class LeafNode(HTMLNode):
+	def __init__(self, tag, value, props=None):
+		super().__init__(tag, value, None, props)
+
+	def to_html(self):
+		if self.value == None:
+			raise ValueError
+		elif self.tag == None:
+			return self.value
+		elif self.tag == "a":
+			return f"<a {self.props_to_html().strip(' ')}>{self.value}</a>"
+		elif self.tag == "img":
+			return f'<img src="{self.value}" />' #Figure out how to add alt-text.
+		else:
+			return f"<{self.tag}>{self.value}</{self.tag}>"
