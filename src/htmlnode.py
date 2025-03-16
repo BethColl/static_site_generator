@@ -1,4 +1,3 @@
-
 class HTMLNode:
 	def __init__(self, tag=None, value=None, children=None, props=None):
 		self.tag = tag #string representing the HTML tag name
@@ -25,13 +24,32 @@ class HTMLNode:
 	def __repr__(self):
 		return f' The tag is {self.tag}. The value is {self.value}. The children are {self.children}. The props are {self.props}.'
 
+class ParentNode(HTMLNode):
+	def __init__(self, tag, children, props=None):
+		super().__init__(tag, None, children, props)
+
+	def to_html(self):
+		if self.tag == None:
+			raise ValueError("No tag.")
+		elif self.children == None:
+			raise ValueError("No child nodes.")
+		else:
+			result = f'<{self.tag}>'
+			for child in self.children:
+				if hasattr(child, 'children'):
+					result = result + child.to_html()
+				else:
+					raise ValueError("Improperly defined node.")
+		result = result + f'</{self.tag}>'
+		return result
+
 class LeafNode(HTMLNode):
 	def __init__(self, tag, value, props=None):
 		super().__init__(tag, value, None, props)
 
 	def to_html(self):
 		if self.value == None:
-			raise ValueError
+			raise ValueError("No tag.")
 		elif self.tag == None:
 			return self.value
 		elif self.tag == "a":
